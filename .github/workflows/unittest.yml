@@ -1,0 +1,18 @@
+on: [push, pull_request]
+name: Unit test
+jobs:
+  unit_test_on_linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-go@v1
+        with:
+          go-version: '1.13.x'
+      - run: go get -u golang.org/x/lint/golint
+      - run: go get -u github.com/golang/mock/mockgen
+      - run: make check
+      - run: make build
+      - run: make test
+      - uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }} #required
